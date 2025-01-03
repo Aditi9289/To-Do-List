@@ -1,0 +1,92 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #355cab, hsl(289, 99%, 73%));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* To-Do App Styles */
+  .todo-app {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  h2 {
+    color: #390aa8;
+    margin-bottom: 20px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  input, select, button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+  }
+  
+  button {
+    background-color: hwb(26 28% 0%);
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: hwb(23 24% 12%);
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+  }
+  
+  ul li {
+    display: flex;
+    justify-content: space-between;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .filter-buttons button {
+    flex: 1;
+    margin: 0 5px;
+  }
+  
+  button.active {
+    background-color: hwb(23 28% 0% / 0.966);
+    color: white;
+  }
+  
+  #export-tasks {
+    margin-top: 20px;
+    width: 100%;
+    background: #4caf50;
+  }
+  
+  #export-tasks:hover {
+    background: #43a047;
+  }
+  
