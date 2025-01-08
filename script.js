@@ -1,105 +1,50 @@
 const inputBox = document.getElementById("input-box");
+const deadlineBox = document.getElementById("deadline-box");
+const priorityBox = document.getElementById("priority-box");
 const listContainer = document.getElementById("list-container");
-const priorityInput = document.getElementById("priority");
-const deadlineInput = document.getElementById("deadline");
-const searchBox = document.getElementById("search-box");
-const exportButton = document.getElementById("export-tasks");
-
-let tasks = [];
 
 function addTask() {
-  const taskText = inputBox.value.trim();
-  const priority = priorityInput.value;
-  const deadline = deadlineInput.value;
+    if (inputBox.value === '') {
+        alert("You must write something!");
+    } else {
+        let li = document.createElement("li");
+        
+        // Proper usage of template literals
+        let taskText = `<span class='task-text'>${inputBox.value}</span>`;
+        let taskDeadline = `<span class='task-deadline'>Deadline: ${deadlineBox.value || 'None'}</span>`;
+        let taskPriority = `<span class='task-priority'>Priority: ${priorityBox.value}</span>`;
+        
+        li.innerHTML = `${taskText} ${taskDeadline} ${taskPriority}`;
+        
+        let span = document.createElement("span");
+        span.innerHTML = "\u00d7"; // Unicode for '×'
+        span.className = "delete-btn";
+        li.appendChild(span);
 
-  if (!taskText) {
-    alert("Task cannot be empty!");
-    return;
-  }
-
-  const task = {
-    text: taskText,
-    priority: priority,
-    deadline: deadline,
-    completed: false,
-  };
-
-  tasks.push(task);
-  renderTasks();
-  inputBox.value = "";
-  deadlineInput.value = "";
+        listContainer.appendChild(li);
+    }
+    inputBox.value = "";
+    deadlineBox.value = "";
+    priorityBox.value = "Low";
+    saveData();
 }
 
-function renderTasks(filter = "all") {
-  listContainer.innerHTML = "";
+listContainer.addEventListener("click", function (e) {
+    if (e.target.tagName === "LI") {
+        e.target.classList.toggle("checked");
+        saveData();
+    } else if (e.target.tagName === "SPAN" && e.target.className === "delete-btn") {
+        e.target.parentElement.remove();
+        saveData();
+    }
+}, false);
 
-  let filteredTasks = tasks;
-  if (filter === "completed") {
-    filteredTasks = tasks.filter(task => task.completed);
-  } else if (filter === "pending") {
-    filteredTasks = tasks.filter(task => !task.completed);
-  }
-
-  filteredTasks.forEach((task, index) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <span>${task.text} (${task.priority}) ${
-      task.deadline ? `- ${task.deadline}` : ""
-    }</span>
-      <button onclick="toggleTask(${index})">${
-      task.completed ? "Undo" : "Complete"
-    }</button>
-      <button onclick="deleteTask(${index})">Delete</button>
-    `;
-    listContainer.appendChild(li);
-  });
+function saveData() {
+    localStorage.setItem("tasks", listContainer.innerHTML);
 }
 
-function toggleTask(index) {
-  tasks[index].completed = !tasks[index].completed;
-  renderTasks();
+function showTasks() {
+    listContainer.innerHTML = localStorage.getItem("tasks") || "";
 }
 
-function deleteTask(index) {
-  tasks.splice(index, 1);
-  renderTasks();
-}
-
-function filterTasks(filter) {
-  renderTasks(filter);
-}
-
-function searchTasks() {
-  const query = searchBox.value.toLowerCase();
-  const filteredTasks = tasks.filter(task =>
-    task.text.toLowerCase().includes(query)
-  );
-  listContainer.innerHTML = "";
-  filteredTasks.forEach(task => {
-    const li = document.createElement("li");
-    li.textContent = task.text;
-    listContainer.appendChild(li);
-  });
-}
-
-function exportTasks() {
-  const blob = new Blob([JSON.stringify(tasks, null, 2)], {
-    type: "application/json",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "tasks.json";
-  a.click();
-}
-
-document.getElementById("add-task").onclick = addTask;
-document.getElementById("filter-all").onclick = () => filterTasks("all");
-document.getElementById("filter-completed").onclick = () =>
-  filterTasks("completed");
-document.getElementById("filter-pending").onclick = () =>
-  filterTasks("pending");
-searchBox.oninput = searchTasks;
-exportButton.onclick = exportTasks;
-
-renderTasks();
+showTasks();
